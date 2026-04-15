@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "13aa4bbaba1314b2",
+        "id": "0626c592242ac73b",
         "type": "tabs",
         "children": [
           {
-            "id": "05fb7029902204c2",
+            "id": "510facea21c63c74",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -205,8 +205,13 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "05fb7029902204c2",
+  "active": "293fd12f698625c1",
   "lastOpenFiles": [
+    "cuidado-feminino/02-tecnico/padroes/Padroes - Clean Code e SOLID.md",
+    "cuidado-feminino/02-tecnico/banco/Banco - Modelagem de Ciclo Menstrual.md",
+    "cuidado-feminino/04-git-journal/2026-04-15-sprint01-conclusao.md",
+    "cuidado-feminino/00-inbox/templates/Template-Git-Journal.md",
+    "cuidado-feminino/00-inbox/templates/Template-ADR.md",
     "package-lock.json",
     "node_modules/git/lib/git/internal/git_tree.js",
     "node_modules/git/lib/git/internal/git_blob.js",
@@ -217,7 +222,6 @@
     "node_modules/git/lib/sprintf/sprintf.js",
     "node_modules/git/lib/git/user_info.js",
     "node_modules/git/lib/git/tree.js",
-    "node_modules/git/lib/git/tag.js",
     "node_modules/git/README.md",
     "node_modules/mime/README.md",
     "cuidado-feminino/00-inbox/templates/Template-Reuniao.md",
@@ -225,17 +229,13 @@
     "cuidado-feminino/Guia-de-Configuracao.md",
     "cuidado-feminino/03-tcc/TCC - Visao Geral e Cronograma.md",
     "cuidado-feminino/02-tecnico/padroes/Padroes - Conventional Commits.md",
-    "cuidado-feminino/02-tecnico/padroes/Padroes - Clean Code e SOLID.md",
     "Sem título.canvas",
-    "cuidado-feminino/02-tecnico/banco/Banco - Modelagem de Ciclo Menstrual.md",
     "cuidado-feminino/02-tecnico/backend/Backend - Arquitetura Spring Boot.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-003 - Media movel ponderada para ciclo.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-002 - MariaDB como banco principal.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-001 - Java 21 + Spring Boot 3.md",
     "cuidado-feminino/00-inbox/templates/Template-Retrospectiva-Sprint.md",
     "cuidado-feminino/00-inbox/templates/Template-Referencia-TCC.md",
-    "cuidado-feminino/00-inbox/templates/Template-Git-Journal.md",
-    "cuidado-feminino/00-inbox/templates/Template-ADR.md",
     "cuidado-feminino/Home.md",
     "obsidian-vault/02-tecnico/padroes/Padr├Áes ÔÇö Conventional Commits.md",
     "obsidian-vault/02-tecnico/padroes/Padr├Áes ÔÇö Clean Code e SOLID.md",

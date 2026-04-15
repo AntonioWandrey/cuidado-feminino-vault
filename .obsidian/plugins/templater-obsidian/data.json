@@ -1,0 +1,54 @@
+{
+  "command_timeout": 5,
+  "templates_folder": "cuidado-feminino/00-inbox/templates",
+  "templates_pairs": [
+    [
+      "",
+      ""
+    ]
+  ],
+  "trigger_on_file_creation": true,
+  "auto_jump_to_cursor": false,
+  "enable_system_commands": false,
+  "shell_path": "",
+  "user_scripts_folder": "",
+  "enable_folder_templates": true,
+  "folder_templates": [
+    {
+      "folder": "Decisões Técnicas ",
+      "template": "cuidado-feminino/00-inbox/templates/Template-ADR.md"
+    },
+    {
+      "folder": "Log. Diário para dev",
+      "template": "cuidado-feminino/00-inbox/templates/Template-Git-Journal.md"
+    },
+    {
+      "folder": "Ref. Bibliográfica",
+      "template": "cuidado-feminino/00-inbox/templates/Template-Referencia-TCC.md"
+    },
+    {
+      "folder": "Retro. Sprint ",
+      "template": "cuidado-feminino/00-inbox/templates/Template-Retrospectiva-Sprint.md"
+    },
+    {
+      "folder": "Ata Reunião ",
+      "template": "cuidado-feminino/00-inbox/templates/Template-Reuniao.md"
+    }
+  ],
+  "enable_file_templates": false,
+  "file_templates": [
+    {
+      "regex": ".*",
+      "template": ""
+    }
+  ],
+  "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
+  "enabled_templates_hotkeys": [
+    ""
+  ],
+  "startup_templates": [
+    ""
+  ],
+  "intellisense_render": 1
+}

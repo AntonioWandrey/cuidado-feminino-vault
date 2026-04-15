@@ -34,41 +34,46 @@
 
 Settings > Community Plugins > Browse
 
-### Obrigatorios
+### Obrigatorios (ja instalados)
 
-| Plugin | Para que serve |
-|--------|----------------|
-| Templater | Templates com variaveis dinamicas (data, numero) |
-| Dataview | Consultas nas notas - lista ADRs, referencias, etc |
-| Obsidian Git | Sincroniza o vault com GitHub |
+| Plugin | ID | Para que serve |
+|--------|-----|----------------|
+| Templater | templater-obsidian | Templates com variaveis dinamicas (data, numero) |
+| Obsidian Git | obsidian-git | Sincroniza o vault com GitHub |
+| Calendar | calendar | Visualiza notas diarias no calendario |
+
+### Obrigatorios (instalar agora)
+
+| Plugin | ID | Para que serve |
+|--------|-----|----------------|
+| Dataview | dataview | Consultas nas notas — lista ADRs por status, referencias por capitulo, etc. |
+| Advanced Tables | advanced-tables | Editar tabelas Markdown facilmente com Tab e Enter |
+
+**Como instalar:**
+1. Settings > Community Plugins > Browse
+2. Pesquisar pelo nome
+3. Install > Enable
 
 ### Recomendados
 
-| Plugin | Para que serve |
-|--------|----------------|
-| Calendar | Visualiza notas diarias no calendario |
-| Advanced Tables | Editar tabelas Markdown facilmente |
+| Plugin | ID | Para que serve |
+|--------|-----|----------------|
+| Kanban | obsidian-kanban | Board de tarefas por sprint dentro do vault |
+| Excalidraw | obsidian-excalidraw-plugin | Diagramas e sketches de arquitetura |
 
 ---
 
 ## 4. Configurar Obsidian Git
 
-1. Instala o plugin Obsidian Git
-2. Cria um repositorio no GitHub: `cuidado-feminino-vault`
-3. No terminal, dentro da pasta do vault:
+Plugin ja instalado. Configuracoes:
 
-```bash
-git init
-git remote add origin https://github.com/SeuUsuario/cuidado-feminino-vault.git
-git add .
-git commit -m "chore: setup inicial do vault"
-git push -u origin main
-```
-
-4. Configuracoes do plugin:
-   - Vault backup interval: 30 minutos
-   - Auto pull on startup: ativado
+1. Settings > Obsidian Git
+   - Vault backup interval (minutos): `30`
+   - Auto pull on startup: `ativado`
    - Commit message: `vault: backup automatico`
+   - Pull updates on startup: `ativado`
+
+2. Repositorio configurado: `cuidado-feminino-vault` no GitHub
 
 ---
 
@@ -76,7 +81,14 @@ git push -u origin main
 
 1. Settings > Templater
 2. Template folder location: `00-inbox/templates`
-3. Trigger Templater on new file creation: ativado
+3. Trigger Templater on new file creation: `ativado`
+
+**Templates disponiveis:**
+- `Template-ADR.md` — para novas decisoes arquiteturais
+- `Template-Git-Journal.md` — para log diario de desenvolvimento
+- `Template-Referencia-TCC.md` — para referencias bibliograficas
+- `Template-Retrospectiva-Sprint.md` — para retrospectivas de sprint
+- `Template-Reuniao.md` — para atas de reuniao
 
 **Como usar:**
 - Cria uma nova nota
@@ -85,7 +97,32 @@ git push -u origin main
 
 ---
 
-## 6. Atalhos Uteis
+## 6. Configurar Dataview (apos instalar)
+
+O Dataview permite consultas tipo SQL nas notas. Exemplos de uso para este vault:
+
+**Listar todas as ADRs:**
+~~~
+```dataview
+TABLE data, status
+FROM "01-projeto/decisoes"
+WHERE contains(tags, "decisao")
+SORT data DESC
+```
+~~~
+
+**Listar referencias por capitulo do TCC:**
+~~~
+```dataview
+TABLE tipo, file.name
+FROM "03-tcc"
+WHERE contains(tags, "referencia")
+```
+~~~
+
+---
+
+## 7. Atalhos Uteis
 
 | Atalho | Acao |
 |--------|------|
@@ -95,10 +132,11 @@ git push -u origin main
 | Ctrl+E | Alternar edicao e preview |
 | Ctrl+Shift+F | Busca em todo o vault |
 | [[ | Criar link para outra nota |
+| Ctrl+G | Abrir graph view |
 
 ---
 
-## 7. Tags do Projeto
+## 8. Tags do Projeto
 
 ```
 #decisao
@@ -111,6 +149,9 @@ git push -u origin main
 #tcc
 #referencia
 #git
+#sprint-00
 #sprint-01
 #sprint-02
+#sprint-03
+#sprint-04
 ```

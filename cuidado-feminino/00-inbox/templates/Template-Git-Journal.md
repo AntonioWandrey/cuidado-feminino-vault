@@ -1,10 +1,30 @@
 ---
-data: 
-sprint: 
+data:
+sprint:
 tags:
   - git
   - dev
+  - reuniao
+participantes:
 ---
+
+# Reuniao - Data
+
+## Pauta
+- 
+
+## Discussoes
+
+
+## Decisoes Tomadas
+- 
+
+## Proximos Passos
+- [ ] 
+- [ ] 
+
+## Links e Referencias
+- 
 
 # Git Journal - Data
 
