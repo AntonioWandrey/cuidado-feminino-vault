@@ -8,46 +8,46 @@ tags:
   - sprint-01
 ---
 
-# ADR-003 - Media Movel Ponderada para Previsao de Ciclo
+# ADR-003 - Media Móvel Ponderada para Previsão de Ciclo
 
 ## Contexto
 
-O motor preditivo precisa calcular a proxima menstruacao, ovulacao e periodo fertil com base no historico de ciclos. Era necessario um algoritmo que equilibrasse precisao e simplicidade, considerando que o historico pode ser pequeno (1-3 ciclos) ou grande (12+).
+O motor preditivo precisa calcular a próxima menstruação, ovulação e período fértil com base no histórico de ciclos. Era necessário um algoritmo que equilibrasse precisão e simplicidade, considerando que o histórico pode ser pequeno (1-3 ciclos) ou grande (12+).
 
-## Decisao
+## Decisão
 
-Usar media movel ponderada dos ultimos 12 ciclos completos, com fallback de 28 dias quando nao ha historico suficiente.
+Usar media móvel ponderada dos últimos 12 ciclos completos, com fallback de 28 dias quando não há histórico suficiente.
 
 **Formula:**
 - Ciclos mais recentes tem peso maior
-- Ovulacao = proxima menstruacao - 14 dias (fase lutea padrao)
-- Periodo fertil = ovulacao - 5 dias ate ovulacao + 1 dia
+- Ovulação = próxima menstruação - 14 dias (fase lútea padrão)
+- Período fértil = ovulação - 5 dias ate ovulação + 1 dia
 
-**Nivel de confianca:**
+**Nível de confiança:**
 - BAIXA: menos de 3 ciclos
 - MEDIA: 3 a 5 ciclos
 - ALTA: 6 ou mais ciclos
 
-## Consequencias
+## Consequências
 
 **Pros:**
 - Simples de implementar e testar
-- Adapta-se ao historico real de cada usuaria
-- Nivel de confianca comunica incerteza para a usuaria
-- Extensivel: pode evoluir para machine learning no futuro
+- Adapta-se ao histórico real de cada usuária
+- Nível de confiança comunica incerteza para a usuária
+- Extensível: pode evoluir para machine learning no futuro
 
 **Contras e Riscos:**
-- Nao considera variacoes hormonais ou condicoes clinicas como SOP
-- A fase lutea de 14 dias e uma media, varia entre mulheres
-- Com poucos ciclos a previsao pode ser imprecisa
+- Não considera variações hormonais ou condições clinicas como SOP
+- A fase lútea de 14 dias e uma media, varia entre mulheres
+- Com poucos ciclos a previsão pode ser imprecisa
 
 ## Alternativas Consideradas
 
-| Alternativa | Por que foi descartada |
-|-------------|------------------------|
-| Media simples | Nao pondera ciclos recentes |
-| Machine Learning | Complexidade desproporcional para a fase atual |
-| Algoritmo de Knaus-Ogino | Muito rigido, nao considera variacoes individuais |
+| Alternativa              | Por que foi descartada                            |
+| ------------------------ | ------------------------------------------------- |
+| Media simples            | Não pondera ciclos recentes                       |
+| Machine Learning         | Complexidade desproporcional para a fase atual    |
+| Algoritmo de Knaus-Ogino | Muito rígido, não considera variações individuais |
 
 ## Referencias
 

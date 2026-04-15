@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "0626c592242ac73b",
+        "id": "fee9561a93481ea2",
         "type": "tabs",
         "children": [
           {
-            "id": "510facea21c63c74",
+            "id": "7a3e5022a6a6482d",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "cuidado-feminino/01-projeto/decisoes/ADR-002 - MariaDB como banco principal.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Nova aba"
+              "title": "ADR-002 - MariaDB como banco principal"
             }
           }
         ]
@@ -207,10 +211,14 @@
   },
   "active": "293fd12f698625c1",
   "lastOpenFiles": [
+    "cuidado-feminino/01-projeto/decisoes/ADR-003 - Media movel ponderada para ciclo.md",
+    "cuidado-feminino/01-projeto/reunioes/Sem título.md",
+    "cuidado-feminino/01-projeto/retrospectivas/Retrospectiva-Sprint-01.md",
+    "cuidado-feminino/00-inbox/templates/Template-Git-Journal.md",
+    "cuidado-feminino/03-tcc/TCC - Visao Geral e Cronograma.md",
     "cuidado-feminino/02-tecnico/padroes/Padroes - Clean Code e SOLID.md",
     "cuidado-feminino/02-tecnico/banco/Banco - Modelagem de Ciclo Menstrual.md",
     "cuidado-feminino/04-git-journal/2026-04-15-sprint01-conclusao.md",
-    "cuidado-feminino/00-inbox/templates/Template-Git-Journal.md",
     "cuidado-feminino/00-inbox/templates/Template-ADR.md",
     "package-lock.json",
     "node_modules/git/lib/git/internal/git_tree.js",
@@ -225,13 +233,10 @@
     "node_modules/git/README.md",
     "node_modules/mime/README.md",
     "cuidado-feminino/00-inbox/templates/Template-Reuniao.md",
-    "cuidado-feminino/01-projeto/reunioes/Sem título.md",
     "cuidado-feminino/Guia-de-Configuracao.md",
-    "cuidado-feminino/03-tcc/TCC - Visao Geral e Cronograma.md",
     "cuidado-feminino/02-tecnico/padroes/Padroes - Conventional Commits.md",
     "Sem título.canvas",
     "cuidado-feminino/02-tecnico/backend/Backend - Arquitetura Spring Boot.md",
-    "cuidado-feminino/01-projeto/decisoes/ADR-003 - Media movel ponderada para ciclo.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-002 - MariaDB como banco principal.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-001 - Java 21 + Spring Boot 3.md",
     "cuidado-feminino/00-inbox/templates/Template-Retrospectiva-Sprint.md",
@@ -242,7 +247,6 @@
     "obsidian-vault/02-tecnico/banco/Banco ÔÇö Modelagem de Ciclo Menstrual.md",
     "obsidian-vault/00-inbox/templates/Template ÔÇö Reuni├úo.md",
     "obsidian-vault/00-inbox/templates/Template ÔÇö Retrospectiva Sprint.md",
-    "obsidian-vault/00-inbox/templates/Template ÔÇö Refer├¬ncia TCC.md",
-    "obsidian-vault/00-inbox/templates/Template ÔÇö Git Journal.md"
+    "obsidian-vault/00-inbox/templates/Template ÔÇö Refer├¬ncia TCC.md"
   ]
 }
