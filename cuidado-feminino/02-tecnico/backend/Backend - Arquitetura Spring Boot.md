@@ -9,7 +9,7 @@ tags:
 # Backend - Arquitetura Spring Boot
 
 > Guia de referencia da arquitetura adotada no projeto.
-> Atualizado em: 2026-04-15
+> Atualizado em: 2026-04-17
 
 ---
 
@@ -21,7 +21,7 @@ tags:
 | Spring Boot | 4.0.4 | Gerado via Initializr |
 | Spring Data JPA | incluso no Boot | Hibernate como provider |
 | Spring Validation | incluso no Boot | Bean Validation |
-| Flyway | flyway-mysql | **DESABILITADO** — divida tecnica |
+| Flyway | flyway-mysql | **ATIVO** — baseline-on-migrate=true (c442b8f) |
 | Lombok | incluso | @Getter, @Setter, @Builder, @Slf4j |
 | MySQL Driver | mysql-connector-j | Compativel com MariaDB |
 
@@ -111,17 +111,19 @@ React (Axios)
 ```properties
 # Conexao MySQL
 spring.datasource.url=jdbc:mysql://localhost:3306/cuidado_feminino?createDatabaseIfNotExist=true&serverTimezone=UTC
-spring.datasource.username=root
+spring.datasource.username=root            # DIVIDA: mover para variavel de ambiente
 spring.datasource.password=root            # DIVIDA: mover para variavel de ambiente
 
 # Hibernate
-spring.jpa.hibernate.ddl-auto=update       # DIVIDA: trocar para validate quando Flyway ativo
+spring.jpa.hibernate.ddl-auto=validate    # Flyway gerencia o schema, Hibernate apenas valida
 spring.jpa.show-sql=true                   # DIVIDA: desabilitar antes de producao
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 spring.jpa.open-in-view=false
 
-# Flyway DESABILITADO
-spring.flyway.enabled=false                # DIVIDA: reativar
+# Flyway ATIVO (reativado em c442b8f — 2026-04-15)
+spring.flyway.enabled=true
+spring.flyway.baseline-on-migrate=true     # suporta banco pre-existente
+spring.flyway.baseline-version=0
 
 # DevTools
 spring.devtools.restart.enabled=false

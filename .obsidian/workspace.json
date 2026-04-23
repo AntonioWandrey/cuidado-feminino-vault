@@ -11,10 +11,14 @@
             "id": "7a3e5022a6a6482d",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Visualização em gráfico"
+              "type": "markdown",
+              "state": {
+                "file": "2026-04-17.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-04-17"
             }
           }
         ]
@@ -207,6 +211,7 @@
   },
   "active": "7a3e5022a6a6482d",
   "lastOpenFiles": [
+    "2026-04-17.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-002 - MariaDB como banco principal.md",
     "cuidado-feminino/01-projeto/decisoes/ADR-003 - Media movel ponderada para ciclo.md",
     "cuidado-feminino/01-projeto/reunioes/Sem título.md",
@@ -242,7 +247,6 @@
     "obsidian-vault/02-tecnico/padroes/Padr├Áes ÔÇö Clean Code e SOLID.md",
     "obsidian-vault/02-tecnico/banco/Banco ÔÇö Modelagem de Ciclo Menstrual.md",
     "obsidian-vault/00-inbox/templates/Template ÔÇö Reuni├úo.md",
-    "obsidian-vault/00-inbox/templates/Template ÔÇö Retrospectiva Sprint.md",
-    "obsidian-vault/00-inbox/templates/Template ÔÇö Refer├¬ncia TCC.md"
+    "obsidian-vault/00-inbox/templates/Template ÔÇö Retrospectiva Sprint.md"
   ]
 }
