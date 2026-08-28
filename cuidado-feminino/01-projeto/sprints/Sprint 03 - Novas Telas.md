@@ -5,11 +5,13 @@ tags:
   - onboarding
   - insights
   - backend
-status: planejado
+status: backlog
 inicio: previsto após Sprint 02
 ---
 
 # Sprint 03 — Novas Telas: Onboarding + Previsões + Insight do Dia
+
+> Adendo de 27/08/2026: esta sprint permanece em backlog. Endpoints de insight e sintomas não são pré-requisitos do calendário local. Qualquer integração de ciclo com o backend depende do [[ADR-006 - Sincronizacao futura com Spring e banco relacional]].
 
 > **Objetivo:** Implementar as telas que existem no protótipo mas ainda não existem no projeto: Onboarding, InsightsScreen e o endpoint de insight do dia no backend.
 

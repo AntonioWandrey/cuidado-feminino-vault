@@ -4,194 +4,77 @@ tags:
   - arquitetura
   - spring
   - java
+atualizado: 2026-08-28
 ---
 
-# Backend - Arquitetura Spring Boot
+# Backend — arquitetura Spring Boot
 
-> Guia de referencia da arquitetura adotada no projeto.
-> Atualizado em: 2026-04-17
+## Stack
 
----
+| Tecnologia | Estado |
+|---|---|
+| Java | 21 LTS |
+| Spring Boot | 4.0.4 |
+| Hibernate ORM | 7.2.x |
+| Spring Data JPA | 8 repositórios detectados |
+| Flyway | migrations V1–V4 |
+| MySQL Connector/J | banco de desenvolvimento |
+| Maven Surefire | 3.5.6 |
+| jsoup | sanitização de HTML rico |
+| H2 | banco isolado da suíte de testes |
 
-## Stack Real
+## Módulos implementados
 
-| Tecnologia | Versao | Observacao |
-|------------|--------|------------|
-| Java | 21 (LTS) | |
-| Spring Boot | 4.0.4 | Gerado via Initializr |
-| Spring Data JPA | incluso no Boot | Hibernate como provider |
-| Spring Validation | incluso no Boot | Bean Validation |
-| Flyway | flyway-mysql | **ATIVO** — baseline-on-migrate=true (c442b8f) |
-| Lombok | incluso | @Getter, @Setter, @Builder, @Slf4j |
-| MySQL Driver | mysql-connector-j | Compativel com MariaDB |
-
----
-
-## Estrutura de Pacotes Real
-
-> **Atencao:** O package raiz usa uppercase (`Cuidado.Feminino.API`), o que nao e convencional em Java.
-> O padrao correto seria `br.com.unifebe.saude` (conforme groupId no pom.xml).
-> Manter o atual por ora para nao quebrar o build.
-
-```
+```text
 Cuidado.Feminino.API
-├── application
-│   ├── dto
-│   │   ├── CicloRequest.java
-│   │   ├── CicloResponse.java
-│   │   ├── EncerrarCicloRequest.java
-│   │   ├── PrevisaoResponse.java
-│   │   └── CalendarioResponse.java
-│   └── exception
-│       ├── CicloNaoEncontradoException.java
-│       ├── CicloEmAbertoException.java
-│       └── GlobalExceptionHandler.java
-├── domain
-│   ├── entity
-│   │   ├── CicloMenstrual.java        (com @PrePersist/@PreUpdate)
-│   │   └── PrevisaoCiclo.java
-│   ├── repository
-│   │   ├── CicloMenstrualRepository.java
-│   │   └── PrevisaoCicloRepository.java
-│   └── service
-│       ├── CicloService.java          (orquestra regras de negocio)
-│       └── MotorPreditivoCiclo.java   (algoritmo preditivo — @Component)
-└── infrastructure
-    ├── controller
-    │   └── CicloController.java       (/api/v1/ciclos)
-    └── config
-        └── CorsConfig.java
-
---- LEGADO (Sprint 00 — fora da arquitetura correta) ---
-model/RegistroSaude.java           → mover para domain/entity/
-repository/RegistroRepository.java → mover para domain/repository/
-controller/RegistroController.java → mover para infrastructure/controller/
+├── ciclo menstrual e previsão remota
+├── conteúdo educativo público e administrativo
+├── sanitização de HTML e mídia
+├── categorias e séries
+├── registro de queixas
+├── tratamento global de erros
+├── CORS e Actuator
+└── DataSeeder
 ```
 
----
+O package raiz em maiúsculas é legado e não segue a convenção Java; a correção exige refatoração coordenada.
 
-## Endpoints Implementados (Sprint 01)
+## Endpoints principais
 
-| Metodo | Endpoint | Descricao | Status HTTP |
-|--------|----------|-----------|-------------|
-| POST | /api/v1/ciclos | Registrar inicio de ciclo | 201 Created |
-| PATCH | /api/v1/ciclos/{id}/encerrar | Encerrar ciclo em aberto | 200 OK |
-| GET | /api/v1/ciclos | Listar ciclos da usuaria | 200 OK |
-| GET | /api/v1/ciclos/previsao | Gerar e obter previsao | 200 OK |
-| GET | /api/v1/ciclos/calendario?meses=3 | Projecao para o calendario | 200 OK |
+### Ciclos remotos
 
----
+- `POST /api/v1/ciclos`;
+- `PATCH /api/v1/ciclos/{id}/encerrar`;
+- `GET /api/v1/ciclos`;
+- `GET /api/v1/ciclos/previsao`;
+- `GET /api/v1/ciclos/calendario`.
 
-## Fluxo de uma Requisicao
+Esses endpoints não são consumidos pelo calendário local da Entrega 2.
 
-```
-React (Axios)
-    POST /api/v1/ciclos
-    CicloController.registrarInicio(@RequestBody @Valid CicloRequest)
-    CicloService.registrarInicio(request)
-        CicloMenstrualRepository.save(entity)
-    return CicloResponse.de(entity)
-    HTTP 201 Created
+### Conteúdo e queixas
 
-React (Axios)
-    GET /api/v1/ciclos/previsao
-    CicloController.obterPrevisao()
-    CicloService.gerarPrevisao()
-        CicloMenstrualRepository.findUltimos12CiclosCompletos(usuarioId)
-        MotorPreditivoCiclo.calcularPrevisao(usuarioId, ultimaDataInicio, ciclos)
-        PrevisaoCicloRepository.save(previsao)
-    return PrevisaoResponse.de(previsao)
-    HTTP 200 OK
+- `/api/conteudos`, `/api/categorias`, `/api/series` para leitura;
+- `/api/admin/conteudos` para criar, editar, publicar e excluir logicamente;
+- `/api/queixas` para registro e consulta.
+
+O controller administrativo é exclusivo da demonstração local enquanto não houver autenticação. Consultas públicas e séries filtram conteúdos inativos. O HTML é sanitizado antes da persistência; links e mídia usam HTTPS, SVG/SVGZ são bloqueados e YouTube é normalizado sem autoplay.
+
+## Configuração local
+
+O arquivo rastreado ativa os perfis `local,dev`. Credenciais ficam em `application-local.properties`, criado a partir do exemplo e ignorado pelo Git.
+
+```powershell
+cd backend\cuidado-feminino-api
+Copy-Item src\main\resources\application-local.properties.example src\main\resources\application-local.properties
+.\mvnw.cmd spring-boot:run
 ```
 
----
+## Testes e riscos
 
-## application.properties (Estado Real)
-
-```properties
-# Conexao MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/cuidado_feminino?createDatabaseIfNotExist=true&serverTimezone=UTC
-spring.datasource.username=root            # DIVIDA: mover para variavel de ambiente
-spring.datasource.password=root            # DIVIDA: mover para variavel de ambiente
-
-# Hibernate
-spring.jpa.hibernate.ddl-auto=validate    # Flyway gerencia o schema, Hibernate apenas valida
-spring.jpa.show-sql=true                   # DIVIDA: desabilitar antes de producao
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-spring.jpa.open-in-view=false
-
-# Flyway ATIVO (reativado em c442b8f — 2026-04-15)
-spring.flyway.enabled=true
-spring.flyway.baseline-on-migrate=true     # suporta banco pre-existente
-spring.flyway.baseline-version=0
-
-# DevTools
-spring.devtools.restart.enabled=false
-```
-
-**Estado ideal para producao:**
-```properties
-spring.datasource.username=${DB_USER:root}
-spring.datasource.password=${DB_PASS:}
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=false
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-```
-
----
-
-## Anotacoes Importantes
-
-| Anotacao | Onde usar | Para que serve |
-|----------|-----------|----------------|
-| @RestController | Controller | Combina @Controller + @ResponseBody |
-| @RequestMapping | Controller | Define a rota base |
-| @Service | Service | Marca como bean de servico |
-| @Component | Motor Preditivo | Bean generico gerenciado pelo Spring |
-| @Repository | Repository | Marca como repositorio e traduz excecoes JPA |
-| @Entity | Entity | Mapeia para tabela do banco |
-| @PrePersist/@PreUpdate | Entity | Hooks do ciclo de vida JPA |
-| @Valid | Controller params | Dispara validacao do Bean Validation |
-| @Slf4j | Service/Component | Injeta logger via Lombok |
-| @RequiredArgsConstructor | Service/Controller | Injecao de dependencia via construtor |
-| @Transactional | Service methods | Controle de transacao |
-
----
-
-## Tratamento Global de Erros
-
-```java
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(CicloNaoEncontradoException.class)
-    public ResponseEntity<ErroResponse> handleNotFound(CicloNaoEncontradoException ex) {
-        return ResponseEntity.status(404).body(new ErroResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(CicloEmAbertoException.class)
-    public ResponseEntity<ErroResponse> handleConflict(CicloEmAbertoException ex) {
-        return ResponseEntity.status(409).body(new ErroResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException ex) {
-        // retorna 400 com lista de campos invalidos
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroResponse> handleGeneric(Exception ex) {
-        log.error("Erro nao tratado", ex);
-        return ResponseEntity.status(500).body(new ErroResponse("Erro interno"));
-        // NUNCA expor stack trace na resposta
-    }
-}
-```
-
----
-
-## Referencias
-
-- https://docs.spring.io/spring-boot/docs/current/reference/html/
-- https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
+- 43 testes aprovados em 28/08/2026;
+- contexto usa perfil `test` e H2 em memória, sem tocar no MySQL local;
+- smoke CRUD aprovado com MySQL e artigo de demonstração;
+- migrations MySQL não são executadas pelo perfil H2 e ainda exigem validação própria;
+- `usuarioId = 1` ainda aparece no protótipo remoto;
+- o motor remoto confunde duração do sangramento com intervalo do ciclo;
+- endpoints administrativos exigem autenticação antes de publicação externa.

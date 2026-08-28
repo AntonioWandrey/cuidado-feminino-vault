@@ -61,3 +61,7 @@ tags:
 - @PrePersist e @PreUpdate sao hooks de ciclo de vida do JPA executados automaticamente antes de INSERT e UPDATE
 - Records Java sao imutaveis — ideal para DTOs de request/response sem boilerplate
 - @Transactional(readOnly = true) otimiza queries de leitura no Hibernate
+
+## Adendo — 27/08/2026
+
+Este registro é histórico. Flyway foi reativado posteriormente e o frontend deixou de depender de uma `baseURL` fixa por módulo. Para a entrega preliminar, o calendário passou a usar persistência e previsão locais conforme o [[ADR-005 - Calendario local-first e previsao no dispositivo]].

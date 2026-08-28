@@ -4,164 +4,72 @@ tags:
   - arquitetura
   - react
   - typescript
+atualizado: 2026-08-28
 ---
 
-# Frontend - Arquitetura React
+# Frontend — arquitetura React
 
-> Estado real do frontend em 2026-04-15.
+## Stack atual
 
----
+| Tecnologia | Versão/função |
+|---|---|
+| React | 18.3.1 |
+| TypeScript | 5.8.3, strict mode |
+| Vite | 8.0.0 |
+| Tailwind CSS | 3.4.17 |
+| TanStack Query | 5.83.0 |
+| Axios | 1.13.6 |
+| Vitest | 4.1.0 |
+| Capacitor | 8.3.4 |
+| Tiptap | 3.30.5, editor de artigos |
+| DOMPurify | 3.4.14, sanitização defensiva |
 
-## Stack Real
+## Fluxos de dados
 
-| Tecnologia | Versao | Observacao |
-|------------|--------|------------|
-| React | 18.3.1 | |
-| TypeScript | 5.8.3 | strict mode |
-| Vite | 8.0.0 | build tool |
-| Tailwind CSS | 3.4.17 | |
-| Shadcn/UI | components.json | baseado em Radix UI |
-| React Query | 5.83.0 | @tanstack/react-query |
-| Axios | 1.13.6 | HTTP client |
-| React Router | 6.30.1 | navegacao |
-| React Hook Form | 7.61.1 | formularios |
-| Zod | 3.25.76 | validacao de schemas |
-| date-fns | 3.6.0 | manipulacao de datas |
-| react-day-picker | 8.10.1 | componente de calendario |
-| recharts | 2.15.4 | graficos (instalado, nao usado ainda) |
-| Vitest | 4.1.0 | testes unitarios |
+```text
+CalendarioPage
+└── cicloService
+    ├── valida início, fim e sobreposição
+    ├── localStorage: cuidado-feminino:ciclos:v1
+    └── calcula previsão local
 
----
+Conteúdos públicos / gestão / categorias / séries / queixas
+└── services → api.ts → Spring Boot
+    ├── conteúdo real sem fallback fictício
+    └── refetch em montagem, foco e intervalo de demonstração
 
-## Estrutura de Paginas
-
-```
-src/
-├── pages/
-│   ├── Index.tsx           Roteador de abas (estado: activeTab)
-│   ├── HomePage.tsx        Aba Home — saudacao, dicas, acesso rapido
-│   ├── CalendarioPage.tsx  Aba Calendario — AGENDA DE CONSULTAS (ver nota abaixo)
-│   ├── TrilhasPage.tsx     Aba Trilhas — conteudo educacional
-│   ├── PerfilPage.tsx      Aba Perfil — dados da usuaria
-│   └── NotFound.tsx        404
-├── components/
-│   ├── BottomNav.tsx       Navegacao inferior com 4 abas
-│   ├── NavLink.tsx         Item individual do BottomNav
-│   ├── SymptomForm.tsx     Modal de registro de sintomas (Sprint 00)
-│   ├── WellnessTipsCarousel.tsx Carrossel de dicas
-│   └── ui/                 Componentes Shadcn/UI (button, card, dialog, etc.)
-├── services/
-│   └── api.ts              Instancia Axios — BASE URL INCORRETA (ver nota)
-├── hooks/
-│   └── use-mobile.tsx
-├── lib/
-│   ├── utils.ts            cn() helper
-│   └── validations.ts      Schemas Zod
-└── types/
-    └── index.ts            Tipos globais
+Build Vite
+└── dist → Capacitor sync → android/app/src/main/assets/public
 ```
 
----
+## Páginas
 
-## Navegacao
+- `HomePage`: resumo, atalhos e conteúdo em destaque;
+- `CalendarioPage`: calendário menstrual, período real, previsão, histórico e queixas;
+- `ConteudosPage`: listagem, busca e filtros;
+- `ConteudoDetalhePage`: leitura do conteúdo;
+- `GestaoArtigosPage`: listagem administrativa, publicação e exclusão;
+- `ArtigoFormPage`: criação, edição, Tiptap e prévia segura;
+- `TrilhasPage`: séries e trilhas;
+- `PerfilPage`: estatísticas e regularidade;
+- `NotFound`: rota inválida.
 
-O app usa um sistema de abas com estado local em `Index.tsx` (nao React Router):
+## Decisões importantes
 
-```tsx
-const [activeTab, setActiveTab] = useState("home");
-// abas: "home" | "trilhas" | "calendario" | "perfil"
-```
+- O serviço de ciclo não passa pelo Axios nem pelo backend.
+- Datas do ciclo usam `yyyy-MM-dd` e formatação local para evitar deslocamento por fuso.
+- React Query orquestra atualização de tela mesmo para operações locais.
+- Capacitor reaproveita o build Web; Android não é uma segunda base de UI.
+- O conteúdo rico é sanitizado defensivamente e texto legado é normalizado antes da leitura/edição.
 
-O React Router so tem duas rotas: `/` (Index) e `*` (NotFound).
+## Limitações
 
----
+- `localStorage` não criptografa dados;
+- categorias/séries/queixas ainda possuem fallback de contingência; conteúdo público e gestão exibem erros reais;
+- não há autenticação nem sincronização de ciclos;
+- a gestão Web não pode ser publicada externamente sem autenticação;
+- o bundle principal ainda gera aviso de tamanho acima de 500 kB.
 
-## Estado das Paginas
+## Verificação
 
-### ✅ HomePage (Sprint 00 — funcional)
-- Saudacao com horario do dia
-- Botao "Como estou hoje?" abre SymptomForm
-- Carrossel de dicas de bem-estar
-- Acesso rapido: Trilhas, Calendario, Sintomas
-
-### ✅ SymptomForm (Sprint 00 — funcional)
-- Formulario de registro de sintomas (humor, sintomas fisicos, corrimento, outros sinais)
-- Integrado com backend via `POST /api/saude/registrar`
-- Alerta de UBS com link para Google Maps quando sintomas criticos
-- Validacao com Zod
-
-### ⚠️ CalendarioPage (Sprint 00/02 — atencao)
-> **Esta nao e o calendario de ciclo menstrual planejado para Sprint 02.**
-> A pagina atual e uma **agenda de consultas medicas** (consultas, exames, vacinas).
-> O calendario de ciclo com codigo de cores (vermelho/azul/amarelo) ainda precisa ser implementado.
-> Opcoes para Sprint 02:
-> - Substituir esta pagina pelo calendario de ciclo
-> - Criar nova aba "Ciclo" e renomear esta para "Agenda"
-
-### ⏳ TrilhasPage (conteudo pendente)
-- Estrutura criada, sem conteudo real ainda
-
-### ⏳ PerfilPage (conteudo pendente)
-- Estrutura criada, sem dados reais ainda
-
----
-
-## Divida Tecnica: api.ts
-
-```typescript
-// ESTADO ATUAL (errado) — aponta para endpoint do Sprint 00
-const api = axios.create({
-  baseURL: 'http://localhost:8080/api/saude',
-});
-
-// CORRETO — deve apontar para os novos endpoints do Sprint 01
-const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
-});
-```
-
-Os endpoints do Sprint 01 ainda nao estao integrados no frontend.
-
----
-
-## Endpoints do Backend Disponiveis (Sprint 01)
-
-```typescript
-// Registrar inicio de ciclo
-POST /api/v1/ciclos
-Body: { dataInicio: "2026-04-15", fluxo: "MODERADO", observacoes?: "..." }
-
-// Encerrar ciclo
-PATCH /api/v1/ciclos/{id}/encerrar
-Body: { dataFim: "2026-04-20", fluxo?: "LEVE", observacoes?: "..." }
-
-// Listar ciclos
-GET /api/v1/ciclos
-
-// Obter previsao
-GET /api/v1/ciclos/previsao
-
-// Obter calendario de projecoes
-GET /api/v1/ciclos/calendario?meses=3
-```
-
----
-
-## Codigo de Cores do Calendario (Sprint 02 — a implementar)
-
-| Cor | Significado |
-|-----|-------------|
-| Vermelho | Dias de menstruacao |
-| Azul | Periodo fertil |
-| Amarelo | Ovulacao |
-
----
-
-## Como Rodar
-
-```bash
-cd frontend
-npm install
-npm run dev    # http://localhost:5173
-npm test       # vitest run
-```
+Em 28/08/2026: 44 testes aprovados em 12 arquivos, typecheck e build Vite aprovados, ESLint com 0 erros e 3 avisos preexistentes de Fast Refresh. Smoke visual de artigos e calendário aprovado no navegador.

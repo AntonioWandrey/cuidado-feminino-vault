@@ -2,123 +2,66 @@
 tags:
   - banco
   - modelagem
-  - sprint-01
+  - ciclo
+atualizado: 2026-08-27
 ---
 
-# Banco - Modelagem de Ciclo Menstrual
+# Banco — modelagem de ciclo menstrual
 
-> Decisoes de modelagem para as tabelas de ciclo e previsao.
-> Atualizado em: 2026-04-15 — V2 implementada, Flyway desabilitado (ver dividas tecnicas)
+## Escopo
 
----
+O schema abaixo pertence ao backend remoto. A Entrega 2 usa `localStorage` e não grava ciclos no MySQL.
 
-## Status das Migrations
+## Migrations
 
-| Versao | Arquivo | Status |
-|--------|---------|--------|
-| V1 | V1__initial_schema.sql | ✅ Criada — tabela `registros_saude` |
-| V2 | V2__create_cycle_tables.sql | ✅ Criada — `ciclo_menstrual` + `previsao_ciclo` |
+| Versão | Tabelas/função |
+|---|---|
+| V1 | registros de saúde iniciais |
+| V2 | `ciclo_menstrual` e `previsao_ciclo` |
+| V3 | conteúdo educativo, categorias e séries |
+| V4 | registro de queixas |
 
-> **Atencao:** `spring.flyway.enabled=false` — o schema e gerenciado por `ddl-auto=update`.
-> As migrations existem no classpath mas nao estao sendo executadas pelo Flyway.
-> Reativar Flyway e uma divida tecnica prioritaria antes do Sprint 04 (JWT + producao).
+Flyway está presente e as migrations devem ser a fonte do schema nos ambientes executáveis.
 
----
+## Modelo remoto de ciclo
 
-## Diagrama de Entidades
+```text
+ciclo_menstrual
+├── id
+├── usuario_id
+├── data_inicio
+├── data_fim
+├── duracao_dias
+├── fluxo
+├── observacoes
+├── criado_em
+└── atualizado_em
 
-```
-usuario (Sprint 04 - JWT)
-    |
-    |--< ciclo_menstrual
-    |       id              BIGINT PK AUTO_INCREMENT
-    |       usuario_id      BIGINT NOT NULL DEFAULT 1 (fixo ate Sprint 04)
-    |       data_inicio     DATE NOT NULL
-    |       data_fim        DATE NULL (null enquanto ciclo esta aberto)
-    |       duracao_dias    INT NULL  (calculado via @PrePersist/@PreUpdate)
-    |       fluxo           ENUM (LEVE, MODERADO, INTENSO, MUITO_INTENSO)
-    |       observacoes     TEXT
-    |       criado_em       DATETIME NOT NULL
-    |       atualizado_em   DATETIME
-    |
-    |--< previsao_ciclo
-            id                      BIGINT PK AUTO_INCREMENT
-            usuario_id              BIGINT NOT NULL DEFAULT 1
-            gerada_em               DATETIME NOT NULL
-            media_duracao_ciclo     DECIMAL(5,2)
-            desvio_padrao           DECIMAL(5,2) NULL
-            ciclos_analisados       INT
-            proxima_menstruacao     DATE
-            data_ovulacao           DATE
-            inicio_periodo_fertil   DATE
-            fim_periodo_fertil      DATE
-            confianca               ENUM (BAIXA, MEDIA, ALTA)
+previsao_ciclo
+├── usuario_id
+├── media_duracao_ciclo
+├── desvio_padrao
+├── ciclos_analisados
+├── proxima_menstruacao
+├── data_ovulacao
+├── inicio_periodo_fertil
+├── fim_periodo_fertil
+└── confianca
 ```
 
----
+## Correção semântica necessária
 
-## Decisoes de Modelagem
+`duracao_dias` é calculada entre `data_inicio` e `data_fim`; portanto representa a duração do sangramento. A duração do ciclo deve ser calculada entre o início de um período e o início do próximo.
 
-### Por que data_fim e nullable?
-Um ciclo comeca quando a menstruacao inicia. A usuaria registra o inicio agora e encerra depois. NULL em data_fim indica ciclo em aberto. O metodo `estaAberto()` na entity encapsula essa logica.
+O motor remoto não deve usar `duracao_dias` como comprimento do ciclo. Antes da sincronização:
 
-### Por que duracao_dias e calculado e salvo?
-Evita recalcular em todas as consultas do motor preditivo. O `@PreUpdate` do JPA calcula automaticamente: `duracao = DAYS.between(dataInicio, dataFim) + 1`.
+1. adicionar cálculo/coluna com semântica correta ou derivar intervalos por consulta;
+2. testar ciclos regulares, irregulares e histórico curto;
+3. migrar previsões antigas, se forem preservadas;
+4. alinhar a regra com o [[ADR-005 - Calendario local-first e previsao no dispositivo]].
 
-### Por que usar ENUM no banco?
-Para fluxo e confianca com valores fixos, ENUM e mais simples que FK para tabela de dominio e garante integridade. Java enum mapeado com `@Enumerated(EnumType.STRING)`.
+## Limitações
 
-### Por que salvar previsao_ciclo e nao calcular on-the-fly?
-- Historico de previsoes para auditoria clinica
-- Performance: nao recalcula a cada request
-- Futuro: permite comparar previsao x realidade para melhorar o algoritmo
-
-### Por que usuario_id = 1 por enquanto?
-JWT e autenticacao estao planejados para Sprint 04. Ate la, todas as operacoes usam `USUARIO_ID_PADRAO = 1L` fixo no `CicloService`.
-
----
-
-## Indices (V2)
-
-```sql
--- Indice composto para busca de ciclos por usuario
-INDEX idx_ciclo_usuario (usuario_id)
-INDEX idx_ciclo_data_inicio (data_inicio)
-
--- Indice para ultima previsao gerada
-INDEX idx_previsao_usuario (usuario_id)
-```
-
-> Os indices do V2 sao simples. Quando Flyway for reativado, pode-se criar V3 com indices compostos otimizados:
-> ```sql
-> CREATE INDEX idx_ciclo_usuario_inicio ON ciclo_menstrual(usuario_id, data_inicio DESC);
-> CREATE INDEX idx_previsao_usuario_gerada ON previsao_ciclo(usuario_id, gerada_em DESC);
-> ```
-
----
-
-## Queries Uteis para DataGrip
-
-```sql
--- Todos os ciclos de uma usuaria
-SELECT * FROM ciclo_menstrual WHERE usuario_id = 1 ORDER BY data_inicio DESC;
-
--- Ultima previsao gerada
-SELECT * FROM previsao_ciclo WHERE usuario_id = 1 ORDER BY gerada_em DESC LIMIT 1;
-
--- Ciclos completos com duracao
-SELECT data_inicio, data_fim, duracao_dias, fluxo
-FROM ciclo_menstrual
-WHERE usuario_id = 1 AND data_fim IS NOT NULL
-ORDER BY data_inicio DESC;
-
--- Media real de duracao (validar contra o motor)
-SELECT AVG(duracao_dias) as media, STDDEV(duracao_dias) as desvio
-FROM ciclo_menstrual
-WHERE usuario_id = 1 AND duracao_dias IS NOT NULL;
-
--- Ciclo em aberto atualmente
-SELECT * FROM ciclo_menstrual
-WHERE usuario_id = 1 AND data_fim IS NULL
-ORDER BY data_inicio DESC LIMIT 1;
-```
+- `usuario_id = 1` é provisório e exclusivo do protótipo remoto;
+- autenticação e chaves estrangeiras de usuário ainda precisam ser consolidadas;
+- MariaDB é alvo compatível, mas as migrations foram validadas atualmente com MySQL.

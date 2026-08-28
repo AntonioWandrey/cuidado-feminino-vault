@@ -1,66 +1,54 @@
-# Cuidado Feminino - Vault
+# Cuidado Feminino — Vault
 
-> Cerebro tecnico do projeto. Decisoes, padroes, estudos e base do TCC.
+> Fonte de decisões arquiteturais, status acadêmico e referências técnicas do projeto Minha Saúde Feminina.
 
----
+Atualizado em: 28/08/2026.
 
-## Mapa do Vault
+## Acesso rápido
 
-| Pasta | Para que serve |
-|-------|----------------|
-| 00-inbox | Ideias soltas, anotacoes rapidas sem classificacao |
-| 01-projeto | ADRs, reunioes, retrospectivas de sprint |
-| 02-tecnico | Padroes de codigo, banco, backend, frontend |
-| 03-tcc | Referencias academicas, rascunhos, reunioes com orientador |
-| 04-git-journal | Log de commits e decisoes tecnicas importantes |
-
----
-
-## Acesso Rapido
-
-- [[ADR-001 - Java 21 + Spring Boot 3]]
-- [[ADR-002 - MariaDB como banco principal]]
-- [[ADR-003 - Media movel ponderada para ciclo]]
+- [[Entrega Semana 1 - Status 2026-08-28]]
+- [[ADR-001 - Java 21 + Spring Boot 4]]
+- [[ADR-002 - MySQL compativel com MariaDB]]
+- [[ADR-003 - Motor preditivo remoto por media ponderada]]
+- [[ADR-004 - React Vite com Capacitor para Android]]
+- [[ADR-005 - Calendario local-first e previsao no dispositivo]]
+- [[ADR-006 - Sincronizacao futura com Spring e banco relacional]]
+- [[ADR-007 - Conteudo rico HTML sanitizado com Tiptap]]
+- [[Frontend - Arquitetura React]]
+- [[Backend - Arquitetura Spring Boot]]
+- [[Banco - Modelagem de Ciclo Menstrual]]
+- [[Sprint 02 - Frontend Ciclo]]
 - [[Padroes - Conventional Commits]]
 - [[Padroes - Clean Code e SOLID]]
-- [[Banco - Modelagem de Ciclo Menstrual]]
-- [[Backend - Arquitetura Spring Boot]]
-- [[Frontend - Arquitetura React]]
-- [[TCC - Visao Geral e Cronograma]]
 
----
+## Estado do projeto
 
-## Status do Projeto
+| Área | Estado real |
+|---|---|
+| Calendário menstrual local-first | Pronto para demonstração Web em 28/08/2026 |
+| Gestão e integração de artigos | Pronta para demonstração Web local em 28/08/2026 |
+| Conteúdo público | CRUD, Tiptap, sanitização, filtros e integração validados |
+| Registro de queixas | Implementado no backend e frontend |
+| Backend Spring/MySQL | 43 testes isolados em H2; smoke real aprovado com MySQL |
+| Capacitor/Android | Projeto sincronizado; APK não validado por falta de SDK local |
+| Autenticação e LGPD de produção | Backlog |
 
-| Sprint | Foco | Status |
-|--------|------|--------|
-| Sprint 00 | Setup fullstack + persistencia de sintomas | ✅ Concluido |
-| Sprint 01 | Motor Preditivo de Ciclo Menstrual | ✅ Concluido |
-| Sprint 02 | Calendario dinamico com codigo de cores | 🔄 Ativo |
-| Sprint 03 | Log sexual, contraceptivos, libido | ⏳ Futuro |
-| Sprint 04 | JWT Stateless + relatorios medicos PDF | ⏳ Futuro |
+## Arquitetura em uma frase
 
-- **Repositorio:** https://github.com/AntonioWandrey/cuidado-feminino-fullstack
-- **Notion:** (cole o link aqui)
+O calendário usa React → `cicloService` → `localStorage`; conteúdo e queixas usam React → Axios → Spring Boot → MySQL; a sincronização futura dos ciclos permanece proposta no [[ADR-006 - Sincronizacao futura com Spring e banco relacional]].
 
----
+## Dívidas prioritárias
 
-## Dividas Tecnicas Conhecidas
+- [x] Implementar a Entrega 1 de artigos com CRUD administrativo e editor rico.
+- [ ] Corrigir no backend a diferença entre duração do sangramento e duração do ciclo.
+- [ ] Definir autenticação, consentimento e política de sincronização.
+- [ ] Criptografar ou substituir o armazenamento local antes de uso real.
+- [x] Adicionar testes de serviço/controller no backend.
+- [ ] Proteger `/api/admin/**` com autenticação e autorização antes de deploy externo.
+- [ ] Dividir o bundle Web principal para reduzir o aviso acima de 500 kB.
+- [ ] Preparar Android SDK e validar um APK atual.
 
-- [ ] Flyway desabilitado em `application.properties` — reativar apos resolver compatibilidade
-- [ ] `spring.jpa.hibernate.ddl-auto=update` na dev — trocar para `validate` quando Flyway estiver ativo
-- [ ] `api.ts` no frontend ainda aponta para `/api/saude` (Sprint 00) — atualizar para `/api/v1/ciclos`
-- [ ] Arquivos fora da arquitetura: `model/RegistroSaude.java`, `repository/RegistroRepository.java`, `controller/RegistroController.java` precisam ser movidos ou removidos
-- [ ] Package naming `Cuidado.Feminino.API` (uppercase) — nao convencional em Java
-- [ ] Credenciais hardcoded em `application.properties` — mover para variaveis de ambiente
-- [ ] `spring.jpa.show-sql=true` — desabilitar antes de producao
+## Repositórios
 
----
-
-## Links Uteis
-
-- [GitHub](https://github.com/AntonioWandrey/cuidado-feminino-fullstack)
-- [Spring Boot Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/)
-- [React Docs](https://react.dev)
-- [MariaDB Docs](https://mariadb.com/kb/en/)
-- [LGPD - Lei 13.709/2018](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
+- Projeto: https://github.com/AntonioWandrey/cuidado-feminino-fullstack
+- Vault: https://github.com/AntonioWandrey/cuidado-feminino-vault

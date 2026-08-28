@@ -112,3 +112,10 @@ Ver: [[Padroes - Estrategia Git]]
 - `baseline-on-migrate=true` no Flyway e essencial quando o banco ja existe antes de o Flyway ser ativado — sem isso, o Flyway rejeita o banco por nao ter o historico de migrations.
 - Flyway com Spring Boot 4.x funciona normalmente — o concern inicial era infundado.
 - Dependencias como `spring-boot-starter-data-jpa-test` nao existem no ecossistema Spring — o correto e sempre `spring-boot-starter-test`.
+
+## Adendo — 27/08/2026
+
+- Flyway permanece parte da arquitetura e as migrations avançaram até V4.
+- A dívida de `api.ts` apontar diretamente para `/api/saude` deixou de descrever o código atual.
+- O calendário entregue não consome `/api/v1/ciclos`: ele foi replanejado como local-first no [[ADR-005 - Calendario local-first e previsao no dispositivo]].
+- A integração futura com o backend está condicionada ao [[ADR-006 - Sincronizacao futura com Spring e banco relacional]].

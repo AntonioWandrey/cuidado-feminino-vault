@@ -78,3 +78,7 @@ tags:
 - [ ] Criar formulario de inicio/encerramento de ciclo no frontend
 - [ ] Exibir nivel de confianca da previsao para a usuaria
 - [ ] Reativar Flyway e testar migrations do zero
+
+## Adendo — 27/08/2026
+
+O frontend de ciclo foi concluído com escopo replanejado para local-first, não por integração direta com `/api/v1/ciclos`. Flyway foi retomado no backend. O resultado e o backlog remanescente estão em [[Sprint 02 - Frontend Ciclo]].
